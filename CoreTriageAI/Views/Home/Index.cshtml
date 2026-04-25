@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">haris1234</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="sw-page-header">
+    <h1>Dashboard</h1>
+    <p>Welcome to CoreTriageAI — your complain management system.</p>
+</div>
+
+<div class="sw-card" style="max-width: 480px;">
+    <div class="sw-card-header">
+        <div class="sw-card-icon">
+            <i data-lucide="layout-dashboard"></i>
+        </div>
+        <div>
+            <h2>Overview</h2>
+            <p>Complain tracking at a glance.</p>
+        </div>
+    </div>
+    <div class="sw-alert sw-alert-info">
+        <i data-lucide="info"></i>
+        <span>Dashboard content will appear here as you add features.</span>
+    </div>
+    <a asp-controller="Complain" asp-action="Index" class="sw-btn sw-btn-primary">
+        <i data-lucide="plus"></i>
+        Submit a Complain
+    </a>
 </div>

@@ -1,0 +1,94 @@
+@model CoreTriageAI.Models.Complain
+@{
+    ViewData["Title"] = "Submit a Complain";
+}
+
+<div class="sw-page-header">
+    <h1>Submit a Complain</h1>
+    <p>Fill in the form below and we'll get back to you as soon as possible.</p>
+</div>
+
+<div style="max-width: 640px;">
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="sw-alert sw-alert-success" role="alert">
+            <i data-lucide="circle-check"></i>
+            <span>@TempData["Success"]</span>
+        </div>
+    }
+
+    <div class="sw-card">
+        <div class="sw-card-header">
+            <div class="sw-card-icon">
+                <i data-lucide="message-square-warning"></i>
+            </div>
+            <div>
+                <h2>Complain Details</h2>
+                <p>All fields marked <span style="color:#ef4444;">*</span> are required.</p>
+            </div>
+        </div>
+
+        <form asp-controller="Complain" asp-action="Index" method="post" novalidate>
+            @Html.AntiForgeryToken()
+
+            <div class="sw-form-row">
+                <div class="sw-form-group">
+                    <label asp-for="Name" class="sw-label">
+                        Name <span class="required">*</span>
+                    </label>
+                    <div class="sw-input-icon">
+                        <i data-lucide="user" class="icon"></i>
+                        <input asp-for="Name" class="sw-input @(ViewData.ModelState["Name"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                               placeholder="Your full name" autocomplete="name" />
+                    </div>
+                    <span asp-validation-for="Name" class="sw-invalid-feedback"></span>
+                </div>
+
+                <div class="sw-form-group">
+                    <label asp-for="Email" class="sw-label">
+                        Email <span class="required">*</span>
+                    </label>
+                    <div class="sw-input-icon">
+                        <i data-lucide="mail" class="icon"></i>
+                        <input asp-for="Email" class="sw-input @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                               placeholder="your@email.com" autocomplete="email" />
+                    </div>
+                    <span asp-validation-for="Email" class="sw-invalid-feedback"></span>
+                </div>
+            </div>
+
+            <div class="sw-form-group">
+                <label asp-for="PhoneNumber" class="sw-label">
+                    Phone Number <span class="required">*</span>
+                </label>
+                <div class="sw-input-icon">
+                    <i data-lucide="phone" class="icon"></i>
+                    <input asp-for="PhoneNumber" class="sw-input @(ViewData.ModelState["PhoneNumber"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                           placeholder="+92 300 0000000" autocomplete="tel" />
+                </div>
+                <span asp-validation-for="PhoneNumber" class="sw-invalid-feedback"></span>
+            </div>
+
+            <div class="sw-form-group">
+                <label asp-for="ComplainText" class="sw-label">
+                    Complain <span class="required">*</span>
+                </label>
+                <textarea asp-for="ComplainText" class="sw-textarea @(ViewData.ModelState["ComplainText"]?.Errors.Count > 0 ? "is-invalid" : "")"
+                          rows="5" placeholder="Describe your complain in detail..."></textarea>
+                <span asp-validation-for="ComplainText" class="sw-invalid-feedback"></span>
+            </div>
+
+            <div style="margin-top: 8px;">
+                <button type="submit" class="sw-btn sw-btn-primary sw-btn-full sw-btn-lg">
+                    <i data-lucide="send"></i>
+                    Submit Complain
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
