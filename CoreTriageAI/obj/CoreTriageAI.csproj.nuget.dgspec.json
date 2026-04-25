@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\CoreTriageAI.csproj": {}
+    "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\CoreTriageAI.csproj": {}
   },
   "projects": {
-    "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\CoreTriageAI.csproj": {
+    "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\CoreTriageAI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\CoreTriageAI.csproj",
+        "projectUniqueName": "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\CoreTriageAI.csproj",
         "projectName": "CoreTriageAI",
-        "projectPath": "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\CoreTriageAI.csproj",
+        "projectPath": "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\CoreTriageAI.csproj",
         "packagesPath": "C:\\Users\\muhammad.haris\\.nuget\\packages\\",
-        "outputPath": "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\obj\\",
+        "outputPath": "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

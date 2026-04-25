@@ -32,16 +32,20 @@
                 <i data-lucide="menu"></i>
             </button>
 
+            @{
+                var _ctrl = ViewContext.RouteData.Values["controller"]?.ToString();
+                var _act  = ViewContext.RouteData.Values["action"]?.ToString();
+            }
             <nav class="sw-nav collapse" id="swNav">
-                <a class="sw-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                <a class="sw-nav-link @(_ctrl == "Home" ? "active" : "")"
                    asp-area="" asp-controller="Home" asp-action="Index">
                     <i data-lucide="layout-dashboard"></i>
                     Dashboard
                 </a>
-                <a class="sw-nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Complain" ? "active" : "")"
+                <a class="sw-nav-link @(_ctrl == "Complain" && _act == "Index" ? "active" : "")"
                    asp-area="" asp-controller="Complain" asp-action="Index">
                     <i data-lucide="message-square-warning"></i>
-                    Complain
+                    Submit Complaint
                 </a>
             </nav>
         </div>

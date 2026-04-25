@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6WlgCxlBEFc=",
+  "dgSpecHash": "CQpw+ZDR57c=",
   "success": true,
-  "projectFilePath": "F:\\projects\\.net\\CoreAITriageAI\\CoreTriageAI\\CoreTriageAI.csproj",
+  "projectFilePath": "F:\\projects\\.net\\CoreAITriageAI\\coreTriageAI\\CoreTriageAI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\muhammad.haris\\.nuget\\packages\\azure.core\\1.47.1\\azure.core.1.47.1.nupkg.sha512",
     "C:\\Users\\muhammad.haris\\.nuget\\packages\\azure.identity\\1.14.2\\azure.identity.1.14.2.nupkg.sha512",

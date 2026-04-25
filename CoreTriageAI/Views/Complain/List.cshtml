@@ -1,6 +1,6 @@
 @model CoreTriageAI.Models.ComplainListViewModel
 @{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "All Complaints";
 
     var departments = new[]
     {
@@ -24,8 +24,16 @@
 
 <!-- Page Header -->
 <div class="sw-page-header">
-    <h1>Dashboard</h1>
-    <p>Monitor and manage AI-triaged customer complaints</p>
+    <div class="d-flex align-items-start justify-content-between flex-wrap gap-3">
+        <div>
+            <h1>All Complaints</h1>
+            <p>Monitor and manage AI-triaged customer complaints</p>
+        </div>
+        <a class="sw-btn sw-btn-primary" asp-controller="Complain" asp-action="Index">
+            <i data-lucide="plus"></i>
+            New Complaint
+        </a>
+    </div>
 </div>
 
 <!-- Stats Row -->
@@ -63,7 +71,7 @@
 
 <!-- Filter Bar -->
 <div class="sw-filter-bar">
-    <form method="get" asp-controller="Home" asp-action="Index">
+    <form method="get" asp-controller="Complain" asp-action="List">
         <div class="sw-filter-row">
 
             <div class="sw-filter-group">
@@ -119,7 +127,7 @@
                     <i data-lucide="filter"></i>
                     Apply
                 </button>
-                <a class="sw-btn sw-btn-secondary" asp-controller="Home" asp-action="Index">
+                <a class="sw-btn sw-btn-secondary" asp-controller="Complain" asp-action="List">
                     Clear
                 </a>
             </div>
@@ -148,7 +156,7 @@
         @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority) || !string.IsNullOrEmpty(Model.SortBy))
         {
             <a class="sw-btn sw-btn-secondary" style="padding: 5px 14px; font-size: 12px;"
-               asp-controller="Home" asp-action="Index">
+               asp-controller="Complain" asp-action="List">
                 <i data-lucide="x"></i>
                 Clear filters
             </a>
@@ -157,6 +165,7 @@
 
     @if (Model.Complains.Count == 0)
     {
+        <!-- Empty State -->
         <div class="sw-empty-state">
             <div class="sw-empty-icon">
                 <i data-lucide="inbox"></i>
@@ -165,7 +174,7 @@
             @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority))
             {
                 <p>No complaints match your current filters. Try adjusting or clearing them.</p>
-                <a class="sw-btn sw-btn-secondary" asp-controller="Home" asp-action="Index">Clear Filters</a>
+                <a class="sw-btn sw-btn-secondary" asp-controller="Complain" asp-action="List">Clear Filters</a>
             }
             else
             {
@@ -179,6 +188,7 @@
     }
     else
     {
+        <!-- Table -->
         <div class="sw-table-wrapper">
             <table class="sw-table">
                 <thead>
@@ -241,10 +251,12 @@
             </table>
         </div>
 
+        <!-- Pagination -->
         @if (Model.TotalPages > 1)
         {
             <div class="sw-pagination">
 
+                @* Previous *@
                 @if (Model.CurrentPage <= 1)
                 {
                     <span class="sw-page-link disabled"><i data-lucide="chevron-left"></i></span>
@@ -252,7 +264,7 @@
                 else
                 {
                     <a class="sw-page-link"
-                       asp-controller="Home" asp-action="Index"
+                       asp-controller="Complain" asp-action="List"
                        asp-route-page="@(Model.CurrentPage - 1)"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
@@ -261,38 +273,48 @@
                     </a>
                 }
 
+                @* First page + ellipsis *@
                 @if (startPage > 1)
                 {
                     <a class="sw-page-link"
-                       asp-controller="Home" asp-action="Index"
+                       asp-controller="Complain" asp-action="List"
                        asp-route-page="1"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
                        asp-route-priority="@Model.Priority">1</a>
-                    @if (startPage > 2) { <span class="sw-page-ellipsis">…</span> }
+                    @if (startPage > 2)
+                    {
+                        <span class="sw-page-ellipsis">…</span>
+                    }
                 }
 
+                @* Page window *@
                 @for (int i = startPage; i <= endPage; i++)
                 {
                     <a class="sw-page-link @(i == Model.CurrentPage ? "active" : "")"
-                       asp-controller="Home" asp-action="Index"
+                       asp-controller="Complain" asp-action="List"
                        asp-route-page="@i"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
                        asp-route-priority="@Model.Priority">@i</a>
                 }
 
+                @* Last page + ellipsis *@
                 @if (endPage < Model.TotalPages)
                 {
-                    @if (endPage < Model.TotalPages - 1) { <span class="sw-page-ellipsis">…</span> }
+                    @if (endPage < Model.TotalPages - 1)
+                    {
+                        <span class="sw-page-ellipsis">…</span>
+                    }
                     <a class="sw-page-link"
-                       asp-controller="Home" asp-action="Index"
+                       asp-controller="Complain" asp-action="List"
                        asp-route-page="@Model.TotalPages"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
                        asp-route-priority="@Model.Priority">@Model.TotalPages</a>
                 }
 
+                @* Next *@
                 @if (Model.CurrentPage >= Model.TotalPages)
                 {
                     <span class="sw-page-link disabled"><i data-lucide="chevron-right"></i></span>
@@ -300,7 +322,7 @@
                 else
                 {
                     <a class="sw-page-link"
-                       asp-controller="Home" asp-action="Index"
+                       asp-controller="Complain" asp-action="List"
                        asp-route-page="@(Model.CurrentPage + 1)"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
