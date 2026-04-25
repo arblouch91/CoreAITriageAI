@@ -125,6 +125,45 @@ Never edit generated migration files after they have been applied to any databas
 
 ---
 
+## Hackathon Context
+
+**This is a hackathon project.** 4 team members, 5–7 hour time limit. The goal is a working MVP prototype — not production-grade software. Every decision should favor shipping a demo-ready prototype over polish, abstractions, or future-proofing.
+
+### Problem Statement — C-04: Complaint Triage & Intelligent Auto-Response Bot
+> AI that classifies, prioritizes, and drafts professional responses to customer complaints instantly.
+
+Banks receive thousands of customer complaints across email, web forms, mobile apps, and social media. Manually reading, classifying, and routing each complaint creates backlogs and delays resolution — damaging CSAT scores and regulatory standing.
+
+**Objective:** Build a complaint triage tool that ingests mock customer complaints, classifies and prioritizes them using AI, routes them to the correct department, and auto-drafts a professional first response.
+
+### Must-Deliver (MVP Core)
+1. **Complaint Intake** — paste/type a complaint, or pick from a pre-loaded queue of 50 mock cases
+2. **AI Classification** — Category (Fraud, Fees, Service Downtime, Card Issue, etc.), Priority (High/Medium/Low), Sentiment score
+3. **Auto-Routing** — displays the correct handling team based on category
+4. **Drafted Response** — professional, empathetic, personalized reply auto-generated and ready to send with one click
+5. **Queue Dashboard** — all complaints sortable by priority, category, and status
+
+### Example Routing (from problem brief)
+| Complaint | Category | Priority | Team |
+|---|---|---|---|
+| "Charged twice for the same transaction" | Fraud/Billing | High | Billing Team |
+| "Mobile app crashed during bill payment" | Service | Medium | Digital Banking Support |
+| "Account blocked without notice" | Account Management | High | Relationship Management |
+| "Waiting 3 weeks for my debit card" | Card Services | Medium | Card Operations |
+
+### MVP-First Rules (hackathon mode)
+- **Working > perfect.** A rough UI that works beats a polished UI that crashes.
+- **Cut scope aggressively.** If a feature is not in the Must-Deliver list above, skip it.
+- **No over-engineering.** No service abstractions, no repository patterns, no unit tests — controllers can be thicker than normal during the hackathon.
+- **Hardcode when necessary.** Mock data, hardcoded lists, in-memory state — acceptable for demo purposes.
+- **One LLM call per complaint** — classify + route + draft response in a single prompt to save time and API latency.
+- **No auth, no multi-tenancy, no roles** — single shared view, no login required.
+- **Pre-seed the database** with a few sample complaints so the dashboard looks populated on first load.
+- **No migrations for schema changes** — drop and recreate the database if schema needs to change quickly.
+- When in doubt, ask: *"Can we demo this in the next 10 minutes?"* If yes, ship it. If no, simplify.
+
+---
+
 ## What to Avoid
 
 - Do not add npm, webpack, Vite, or any JS build tooling unless asked
