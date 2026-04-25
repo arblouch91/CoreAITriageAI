@@ -10,12 +10,20 @@
         "Card Operations"
     };
 
+    var categories = new[] { "Fraud", "Fees", "Service Downtime", "Card Issue" };
+
+    var statuses = new[] { "Open", "In Progress", "Resolved" };
+
     var sortOptions = new (string? Value, string Label)[]
     {
         (null,            "Most Recent"),
         ("date_asc",      "Oldest First"),
         ("priority_desc", "Priority: High → Low"),
-        ("priority_asc",  "Priority: Low → High")
+        ("priority_asc",  "Priority: Low → High"),
+        ("category_asc",  "Category: A → Z"),
+        ("category_desc", "Category: Z → A"),
+        ("status_asc",    "Status: A → Z"),
+        ("status_desc",   "Status: Z → A")
     };
 
     var startPage = Math.Max(1, Model.CurrentPage - 2);
@@ -72,14 +80,20 @@
                     <option value="">All Departments</option>
                     @foreach (var dept in departments)
                     {
-                        if (Model.Department == dept)
-                        {
-                            <option value="@dept" selected>@dept</option>
-                        }
-                        else
-                        {
-                            <option value="@dept">@dept</option>
-                        }
+                        if (Model.Department == dept) { <option value="@dept" selected>@dept</option> }
+                        else { <option value="@dept">@dept</option> }
+                    }
+                </select>
+            </div>
+
+            <div class="sw-filter-group">
+                <label class="sw-filter-label">Category</label>
+                <select name="category" class="sw-select">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in categories)
+                    {
+                        if (Model.Category == cat) { <option value="@cat" selected>@cat</option> }
+                        else { <option value="@cat">@cat</option> }
                     }
                 </select>
             </div>
@@ -98,18 +112,24 @@
             </div>
 
             <div class="sw-filter-group">
+                <label class="sw-filter-label">Status</label>
+                <select name="status" class="sw-select">
+                    <option value="">All Statuses</option>
+                    @foreach (var st in statuses)
+                    {
+                        if (Model.Status == st) { <option value="@st" selected>@st</option> }
+                        else { <option value="@st">@st</option> }
+                    }
+                </select>
+            </div>
+
+            <div class="sw-filter-group">
                 <label class="sw-filter-label">Sort By</label>
                 <select name="sortBy" class="sw-select">
                     @foreach (var opt in sortOptions)
                     {
-                        if (Model.SortBy == opt.Value)
-                        {
-                            <option value="@opt.Value" selected>@opt.Label</option>
-                        }
-                        else
-                        {
-                            <option value="@opt.Value">@opt.Label</option>
-                        }
+                        if (Model.SortBy == opt.Value) { <option value="@opt.Value" selected>@opt.Label</option> }
+                        else { <option value="@opt.Value">@opt.Label</option> }
                     }
                 </select>
             </div>
@@ -145,7 +165,9 @@
                 <span>Showing <strong>@from–@to</strong> of <strong>@Model.FilteredCount</strong> @(Model.FilteredCount == 1 ? "complaint" : "complaints")</span>
             }
         </span>
-        @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority) || !string.IsNullOrEmpty(Model.SortBy))
+        @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority) ||
+             !string.IsNullOrEmpty(Model.Category)   || !string.IsNullOrEmpty(Model.Status)   ||
+             !string.IsNullOrEmpty(Model.SortBy))
         {
             <a class="sw-btn sw-btn-secondary" style="padding: 5px 14px; font-size: 12px;"
                asp-controller="Home" asp-action="Index">
@@ -162,7 +184,8 @@
                 <i data-lucide="inbox"></i>
             </div>
             <h3>No complaints found</h3>
-            @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority))
+            @if (!string.IsNullOrEmpty(Model.Department) || !string.IsNullOrEmpty(Model.Priority) ||
+                 !string.IsNullOrEmpty(Model.Category)   || !string.IsNullOrEmpty(Model.Status))
             {
                 <p>No complaints match your current filters. Try adjusting or clearing them.</p>
                 <a class="sw-btn sw-btn-secondary" asp-controller="Home" asp-action="Index">Clear Filters</a>
@@ -184,11 +207,14 @@
                 <thead>
                     <tr>
                         <th>Complainant</th>
+                        <th>Category</th>
                         <th>Department</th>
                         <th>Priority</th>
+                        <th>Status</th>
                         <th>Sentiment</th>
                         <th>Submitted</th>
                         <th>Complaint</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -199,6 +225,14 @@
                         var sentColor   = sentScore >= 0.7m ? "#10b981" : sentScore >= 0.4m ? "#f59e0b" : "#ef4444";
                         var priorityKey = (item.Priority ?? "low").ToLower();
                         var priorityCap = char.ToUpper(priorityKey[0]) + priorityKey[1..];
+                        var statusVal   = item.Status ?? "Open";
+                        var statusClass = statusVal switch
+                        {
+                            "Resolved"    => "sw-badge-status-resolved",
+                            "In Progress" => "sw-badge-status-inprogress",
+                            _             => "sw-badge-status-open"
+                        };
+                        var safeResponse = (item.AIDraftedResponse ?? "No AI response generated.").Replace("\"", "&quot;");
 
                         <tr>
                             <td>
@@ -206,10 +240,16 @@
                                 <span class="sw-complainant-email">@item.Email</span>
                             </td>
                             <td>
+                                <span class="sw-badge sw-badge-category" title="@item.Category">@(item.Category ?? "—")</span>
+                            </td>
+                            <td>
                                 <span class="sw-badge sw-badge-dept" title="@item.Department">@item.Department</span>
                             </td>
                             <td>
                                 <span class="sw-badge sw-badge-@priorityKey">@priorityCap</span>
+                            </td>
+                            <td>
+                                <span class="sw-badge @statusClass">@statusVal</span>
                             </td>
                             <td>
                                 <div class="sw-sentiment">
@@ -235,6 +275,14 @@
                             <td>
                                 <p class="sw-complaint-preview">@item.ComplainText</p>
                             </td>
+                            <td>
+                                <button type="button"
+                                        class="sw-btn sw-btn-primary sw-btn-sm"
+                                        onclick="openResponseModal('@safeResponse', '@System.Web.HttpUtility.JavaScriptStringEncode(item.Name)')">
+                                    <i data-lucide="send"></i>
+                                    Send Response
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -256,7 +304,9 @@
                        asp-route-page="@(Model.CurrentPage - 1)"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
-                       asp-route-priority="@Model.Priority">
+                       asp-route-priority="@Model.Priority"
+                       asp-route-category="@Model.Category"
+                       asp-route-status="@Model.Status">
                         <i data-lucide="chevron-left"></i>
                     </a>
                 }
@@ -268,7 +318,9 @@
                        asp-route-page="1"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
-                       asp-route-priority="@Model.Priority">1</a>
+                       asp-route-priority="@Model.Priority"
+                       asp-route-category="@Model.Category"
+                       asp-route-status="@Model.Status">1</a>
                     @if (startPage > 2) { <span class="sw-page-ellipsis">…</span> }
                 }
 
@@ -279,7 +331,9 @@
                        asp-route-page="@i"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
-                       asp-route-priority="@Model.Priority">@i</a>
+                       asp-route-priority="@Model.Priority"
+                       asp-route-category="@Model.Category"
+                       asp-route-status="@Model.Status">@i</a>
                 }
 
                 @if (endPage < Model.TotalPages)
@@ -290,7 +344,9 @@
                        asp-route-page="@Model.TotalPages"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
-                       asp-route-priority="@Model.Priority">@Model.TotalPages</a>
+                       asp-route-priority="@Model.Priority"
+                       asp-route-category="@Model.Category"
+                       asp-route-status="@Model.Status">@Model.TotalPages</a>
                 }
 
                 @if (Model.CurrentPage >= Model.TotalPages)
@@ -304,7 +360,9 @@
                        asp-route-page="@(Model.CurrentPage + 1)"
                        asp-route-sortBy="@Model.SortBy"
                        asp-route-department="@Model.Department"
-                       asp-route-priority="@Model.Priority">
+                       asp-route-priority="@Model.Priority"
+                       asp-route-category="@Model.Category"
+                       asp-route-status="@Model.Status">
                         <i data-lucide="chevron-right"></i>
                     </a>
                 }
@@ -318,3 +376,60 @@
     }
 
 </div>
+
+<!-- Send Response Modal -->
+<div id="response-modal-backdrop" class="sw-modal-backdrop" style="display:none;" onclick="closeResponseModal()"></div>
+<div id="response-modal" class="sw-modal" style="display:none;" role="dialog" aria-modal="true">
+    <div class="sw-modal-header">
+        <div>
+            <h3 class="sw-modal-title">
+                <i data-lucide="mail"></i>
+                AI Drafted Response
+            </h3>
+            <p class="sw-modal-subtitle" id="modal-customer-name"></p>
+        </div>
+        <button type="button" class="sw-modal-close" onclick="closeResponseModal()" aria-label="Close">
+            <i data-lucide="x"></i>
+        </button>
+    </div>
+    <div class="sw-modal-body">
+        <p id="modal-response-text"></p>
+    </div>
+    <div class="sw-modal-footer">
+        <button type="button" class="sw-btn sw-btn-secondary" onclick="closeResponseModal()">
+            <i data-lucide="x"></i>
+            Close
+        </button>
+        <button type="button" class="sw-btn sw-btn-primary" onclick="sendResponse()">
+            <i data-lucide="send"></i>
+            Send
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+(function () {
+    window.openResponseModal = function (response, customerName) {
+        document.getElementById('modal-response-text').textContent = response;
+        document.getElementById('modal-customer-name').textContent = 'To: ' + customerName;
+        document.getElementById('response-modal-backdrop').style.display = 'block';
+        document.getElementById('response-modal').style.display = 'flex';
+        lucide.createIcons();
+    };
+
+    window.closeResponseModal = function () {
+        document.getElementById('response-modal-backdrop').style.display = 'none';
+        document.getElementById('response-modal').style.display = 'none';
+    };
+
+    window.sendResponse = function () {
+        closeResponseModal();
+    };
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeResponseModal();
+    });
+})();
+</script>
+}

@@ -7,8 +7,10 @@ public class ComplaintAnalysis
 {
     public string Department { get; set; } = string.Empty;
     public string Priority { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
     public decimal SentimentsScore { get; set; }
     public string SentimentsLabel { get; set; } = string.Empty;
+    public string AIDraftedResponse { get; set; } = string.Empty;
 }
 
 public class OpenRouterService
@@ -24,19 +26,22 @@ public class OpenRouterService
 
     public async Task<ComplaintAnalysis> AnalyzeAsync(string name, string email, string complaint)
     {
-        var userContent = $"Analyze this customer complaint and return a JSON response.\n\n" +
-                          $"Name: {name}\nEmail: {email}\nComplaint: {complaint}\n" +
-                          $"Available Departments: Fraud / Billing Team, Digital Banking Support, Relationship Management, Card Operations\n\n" +
-                          $"Return ONLY this JSON format:\n" +
-                          "{{\n" +
-                          $"  \"name\": \"{name}\",\n" +
-                          $"  \"email\": \"{email}\",\n" +
-                          $"  \"complaint\": \"{complaint}\",\n" +
-                          "  \"department\": \"<pick the best department from the available list>\",\n" +
-                          "  \"priority\": \"<low | medium | high>\",\n" +
-                          "  \"sentiments_score\": <number between 0.00 and 1.00>,\n" +
-                          "  \"sentiments_label\": \"<Extremely Negative | Negative | Neutral | Positive>\"\n" +
-                          "}}";
+        var userContent =
+            $"Analyze the following bank customer complaint and return a JSON response.\n\n" +
+            $"Customer Name: {name}\n" +
+            $"Customer Email: {email}\n" +
+            $"Complaint: {complaint}\n\n" +
+            "Available Categories (pick exactly one): Fraud, Fees, Service Downtime, Card Issue\n" +
+            "Available Departments (pick exactly one): Fraud / Billing Team, Digital Banking Support, Relationship Management, Card Operations\n\n" +
+            "Return ONLY this JSON — no markdown, no extra keys, no explanation:\n" +
+            "{\n" +
+            "  \"category\": \"<one of the available categories>\",\n" +
+            "  \"department\": \"<one of the available departments>\",\n" +
+            "  \"priority\": \"<low | medium | high>\",\n" +
+            "  \"sentiments_score\": <decimal between 0.00 and 1.00>,\n" +
+            "  \"sentiments_label\": \"<Extremely Negative | Negative | Neutral | Positive>\",\n" +
+            $"  \"ai_drafted_response\": \"<a professional, empathetic, personalized reply addressed to {name} that acknowledges the complaint, apologises sincerely, explains the next steps the bank will take, and provides a realistic resolution timeline — 3 to 5 sentences, formal tone>\"\n" +
+            "}";
 
         var payload = new
         {
@@ -46,7 +51,9 @@ public class OpenRouterService
                 new
                 {
                     role = "system",
-                    content = "You are a complaint management assistant for a bank. Analyze customer complaints and return ONLY a valid JSON object with no extra text, no markdown, no explanation."
+                    content = "You are a senior complaint management specialist at a bank. " +
+                              "Analyse customer complaints and return ONLY a valid JSON object with no extra text, no markdown, and no explanation. " +
+                              "The ai_drafted_response must be professional, empathetic, and personalized to the customer by name."
                 },
                 new { role = "user", content = userContent }
             }
@@ -82,10 +89,12 @@ public class OpenRouterService
 
         return new ComplaintAnalysis
         {
+            Category = root.GetProperty("category").GetString()!,
             Department = root.GetProperty("department").GetString()!,
             Priority = root.GetProperty("priority").GetString()!,
             SentimentsScore = root.GetProperty("sentiments_score").GetDecimal(),
-            SentimentsLabel = root.GetProperty("sentiments_label").GetString()!
+            SentimentsLabel = root.GetProperty("sentiments_label").GetString()!,
+            AIDraftedResponse = root.GetProperty("ai_drafted_response").GetString()!
         };
     }
 }
