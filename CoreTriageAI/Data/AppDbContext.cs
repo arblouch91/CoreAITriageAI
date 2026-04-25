@@ -14,5 +14,13 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Complain>()
+            .Property(c => c.CreatedAt)
+            .HasDefaultValueSql("GETUTCDATE()");
+
+        modelBuilder.Entity<Complain>()
+            .Property(c => c.SentimentScore)
+            .HasPrecision(5, 2);
     }
 }

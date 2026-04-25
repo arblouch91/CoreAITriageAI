@@ -8,7 +8,8 @@ public class Complain
     public string PhoneNumber { get; set; } = string.Empty;
     public string ComplainText { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
-    public string Priority { get; set; } = "Medium";
-    public int? SentimentScore { get; set; }
+    public string Priority { get; set; } = string.Empty;
+    public decimal? SentimentScore { get; set; }
     public string? SentimentLabel { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
