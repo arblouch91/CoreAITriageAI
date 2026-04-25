@@ -38,8 +38,8 @@ public class OpenRouterService
             "  \"category\": \"<one of the available categories>\",\n" +
             "  \"department\": \"<one of the available departments>\",\n" +
             "  \"priority\": \"<low | medium | high>\",\n" +
-            "  \"sentiments_score\": <decimal between 0.00 and 1.00>,\n" +
-            "  \"sentiments_label\": \"<Extremely Negative | Negative | Neutral | Positive>\",\n" +
+            "  \"sentiments_score\": <decimal between 0.00 and 1.00 based on the complaint tone>,\n" +
+            "  \"sentiments_label\": \"<derive from sentiments_score: 0.00-0.25 = Extremely Negative, 0.26-0.50 = Negative, 0.51-0.75 = Neutral, 0.76-1.00 = Positive>\",\n" +
             $"  \"ai_drafted_response\": \"<a professional, empathetic, personalized reply addressed to {name} that acknowledges the complaint, apologises sincerely, explains the next steps the bank will take, and provides a realistic resolution timeline — 3 to 5 sentences, formal tone>\"\n" +
             "}";
 
