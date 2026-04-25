@@ -1,0 +1,80 @@
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+obj/
+bin/
+
+# Visual Studio cache/options
+.vs/
+.vscode/
+
+# Visual Studio Code
+*.code-workspace
+
+# Rider
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Local environment variables
+.env
+.env.local
+
+# NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+*.nuget.cache
+*.nuget.dgspec.json
+*.nuget.g.props
+*.nuget.g.targets
+.nuget/
+
+# dotnet
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Application Insights
+ApplicationInsights.config
+*.ApplicationInsights.config
+
+# Local user secrets
+appsettings.local.json
+appsettings.*.local.json
+
+# Misc
+*.swp
+*.swo
+*~
+.#*
+*.tmp
