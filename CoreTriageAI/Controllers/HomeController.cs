@@ -21,13 +21,15 @@ namespace CoreTriageAI.Controllers
             int page = 1,
             string? sortBy = null,
             string? department = null,
-            string? priority = null)
+            string? priority = null,
+            string? category = null,
+            string? status = null)
         {
             const int pageSize = 10;
 
-            var totalCount       = await _db.Complains.CountAsync();
+            var totalCount        = await _db.Complains.CountAsync();
             var highPriorityCount = await _db.Complains.CountAsync(c => c.Priority == "high");
-            var avgSentiment     = await _db.Complains.AverageAsync(c => (decimal?)c.SentimentScore) ?? 0m;
+            var avgSentiment      = await _db.Complains.AverageAsync(c => (decimal?)c.SentimentScore) ?? 0m;
 
             var query = _db.Complains.AsQueryable();
 
@@ -37,6 +39,12 @@ namespace CoreTriageAI.Controllers
             if (!string.IsNullOrEmpty(priority))
                 query = query.Where(c => c.Priority == priority);
 
+            if (!string.IsNullOrEmpty(category))
+                query = query.Where(c => c.Category == category);
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(c => c.Status == status);
+
             var filteredCount = await query.CountAsync();
 
             query = sortBy switch
@@ -44,6 +52,10 @@ namespace CoreTriageAI.Controllers
                 "date_asc"      => query.OrderBy(c => c.CreatedAt),
                 "priority_desc" => query.OrderByDescending(c => c.Priority == "low" ? 1 : c.Priority == "medium" ? 2 : 3),
                 "priority_asc"  => query.OrderBy(c => c.Priority == "low" ? 1 : c.Priority == "medium" ? 2 : 3),
+                "category_asc"  => query.OrderBy(c => c.Category),
+                "category_desc" => query.OrderByDescending(c => c.Category),
+                "status_asc"    => query.OrderBy(c => c.Status),
+                "status_desc"   => query.OrderByDescending(c => c.Status),
                 _               => query.OrderByDescending(c => c.CreatedAt)
             };
 
@@ -67,7 +79,9 @@ namespace CoreTriageAI.Controllers
                 TotalPages        = totalPages,
                 SortBy            = sortBy,
                 Department        = department,
-                Priority          = priority
+                Priority          = priority,
+                Category          = category,
+                Status            = status
             });
         }
 

@@ -1,3 +1,8 @@
+---
+description: 
+alwaysApply: true
+---
+
 # CoreTriageAI — Claude Project Context
 
 ## Project Overview

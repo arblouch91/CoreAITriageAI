@@ -9,7 +9,10 @@ public class Complain
     public string ComplainText { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
     public string Priority { get; set; } = string.Empty;
+    public string? Category { get; set; }
     public decimal? SentimentScore { get; set; }
     public string? SentimentLabel { get; set; }
+    public string? AIDraftedResponse { get; set; }
+    public string Status { get; set; } = "Open";
     public DateTime CreatedAt { get; set; }
 }

@@ -30,6 +30,12 @@ namespace CoreTriageAI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("AIDraftedResponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ComplainText")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -65,6 +71,10 @@ namespace CoreTriageAI.Migrations
                     b.Property<decimal?>("SentimentScore")
                         .HasPrecision(5, 2)
                         .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

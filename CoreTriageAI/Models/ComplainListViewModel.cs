@@ -13,4 +13,6 @@ public class ComplainListViewModel
     public string? SortBy { get; set; }
     public string? Department { get; set; }
     public string? Priority { get; set; }
+    public string? Category { get; set; }
+    public string? Status { get; set; }
 }
